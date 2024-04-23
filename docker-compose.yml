@@ -1,0 +1,25 @@
+version: "3"
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/local/php/Dockerfile
+      args:
+        - "UID=${UID:-1000}"
+    working_dir: /var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - backend
+    volumes:
+      - ./public:/var/www/html
+      - ./docker/apache-mods/deflate.conf:/etc/apache2/mods-available/deflate.conf
+      - ./docker/local/php/curl.ini:/usr/local/etc/php/conf.d/curl.ini
+      - ./docker/local/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    labels:
+      - traefik.frontend.rule=Host:starter-pack-wp.dev.localhost
+      - traefik.docker.network=backend
+
+networks:
+  backend:
+    external: true
