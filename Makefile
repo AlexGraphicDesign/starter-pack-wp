@@ -11,7 +11,7 @@ down: ## Stop all containers
 php: ## Connect to the PHP container
 	docker-compose exec --user www-data php bash
 
-init-project: build download-wp download-wp-cli success-message
+init-project: generate-env build download-wp download-wp-cli success-message
 
 composer: ## Install Composer dependencies
 	docker-compose exec --user www-data php bash -c 'cd confidential && composer install'
@@ -20,11 +20,15 @@ composer-u: ## Update Composer dependencies
 	docker-compose exec --user www-data php bash -c 'cd confidential && composer update'
 
 download-wp: ## Download Wordpress
-	docker-compose exec --user www-data php bash -c 'composer create-project roots/bedrock .'
+	docker-compose exec --user www-data php bash -c 'mkdir wp-temp && composer create-project roots/bedrock wp-temp && mv wp-temp/* . && rm -rf wp-temp'
 
 download-wp-cli: ## Download the wp-cli.phar
 	docker-compose exec --user www-data php bash -c 'curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar'
 	docker-compose exec php bash -c 'chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp'
+
+generate-env:
+	@rm -f .env
+	@echo "HOST=`hostname -I | cut -d ' ' -f1`" >> .env
 
 success-message: ## Display success message
 	@printf "\n\n"

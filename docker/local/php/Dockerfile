@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y default-mysql-client git libzip-dev zip
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-enable mysqli
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-enable opcache
 
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
@@ -15,7 +16,7 @@ RUN pecl install xdebug \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Composer cherche à stocker son dossier de cache .composer/ à la racine
-RUN chown -R www-data: /var/www/
+RUN chown -R www-data: /var/www
 
 # Copie des fichiers de config
 COPY docker/certs/ /usr/local/share/ca-certificates/
