@@ -6,13 +6,13 @@ services:
       dockerfile: ./docker/local/php/Dockerfile
       args:
         - "UID=${UID:-1000}"
-    working_dir: /var/www/html
+    working_dir: /var/www
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
     volumes:
-      - ./public:/var/www/html
+      - ./public:/var/www
       - ./docker/apache-mods/deflate.conf:/etc/apache2/mods-available/deflate.conf
       - ./docker/local/php/curl.ini:/usr/local/etc/php/conf.d/curl.ini
       - ./docker/local/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
