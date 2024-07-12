@@ -20,7 +20,7 @@ composer-u: ## Update Composer dependencies
 	docker-compose exec --user www-data php bash -c 'cd confidential && composer update'
 
 download-wp: ## Download Wordpress
-	docker-compose exec --user www-data php bash -c 'mkdir wp-temp && composer create-project roots/bedrock wp-temp && mv wp-temp/* . && rm -rf wp-temp'
+	docker-compose exec --user www-data php bash -c 'mkdir wp-temp && composer create-project roots/bedrock wp-temp && shopt -s dotglob && mv wp-temp/* . && shopt -u dotglob &&  rm -rf wp-temp'
 
 download-wp-cli: ## Download the wp-cli.phar
 	docker-compose exec --user www-data php bash -c 'curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar'
